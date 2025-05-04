@@ -7,12 +7,16 @@ public class EnemyShooting : MonoBehaviour
     public float shotPeriod = 1f,
     shotForce = 10f,
     totalSpreadAngle = 0f,
-    inaccuracyAngle = 0f;
+    inaccuracyAngle = 0f,
+    aliveTimer;
 
 
     public int projectilesPerShot = 1;
 
     public GameObject projectilePrefab, target;
+
+    public int damage, piercing, bounces;
+    public bool feed;
 
     //float currentTime = 0f;
 
@@ -40,10 +44,10 @@ public class EnemyShooting : MonoBehaviour
                 GameObject projectile = Instantiate(projectilePrefab, transform.position, projectileRotation);
 
                 EnemyProjectile enemyProjectile = projectile.GetComponent<EnemyProjectile>();
-                enemyProjectile.shotForce = shotForce;
                 Rigidbody2D rb = projectile.GetComponent<Rigidbody2D>();
                 rb.AddForce(projectileRotation * direction * shotForce); // Apply force to the bullet
                 currentAngle-=spread;
+                ApplyGoodies(enemyProjectile);
                 //Debug.Log("CurrentAngle" + currentAngle);
             }
         
@@ -55,5 +59,15 @@ public class EnemyShooting : MonoBehaviour
             projectile.GetComponent<Rigidbody2D>().AddForce(shotForce*direction);
         }
         */
+    }
+
+    void ApplyGoodies(EnemyProjectile enemyProjectile)
+    {
+        enemyProjectile.damage = damage;
+        enemyProjectile.bounces = bounces;
+        enemyProjectile.piercing = piercing;
+        enemyProjectile.aliveTimer = aliveTimer;
+        enemyProjectile.shotForce = shotForce;
+        enemyProjectile.feed = feed;
     }
 }

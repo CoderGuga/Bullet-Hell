@@ -23,6 +23,12 @@ public class Weapon : MonoBehaviour
     float lastShotTime = 0f; // Track the time when the last shot was fired
     [SerializeField] bool infiniteMagazine = false;
 
+
+
+
+    public int damage, piercing, bounces;
+    public float aliveTimer;
+
     private void Start()
     {
         bulletsLeft = maxBullets;
@@ -71,6 +77,8 @@ public class Weapon : MonoBehaviour
                 GameObject bullet = Instantiate(bulletPrefab, firePoint.position, bulletRotation);
                 Rigidbody2D rb = bullet.GetComponent<Rigidbody2D>();
                 rb.AddForce(bulletRotation * dir * bulletForce); // Apply force to the bullet
+                if(bullet.TryGetComponent<Bullet>(out Bullet bulletSc));
+                    ApplyGoodies(bulletSc);
             }
         }
         else
@@ -81,6 +89,8 @@ public class Weapon : MonoBehaviour
             Rigidbody2D rb = bullet.GetComponent<Rigidbody2D>();
             Vector2 dir = (firePoint.position - transform.position).normalized;
             rb.AddForce(dir * bulletForce); // Apply force to the bullet
+            Bullet bulletSc = bullet.GetComponent<Bullet>();
+            ApplyGoodies(bulletSc);
         }
         
         bulletsLeft--;
@@ -104,5 +114,18 @@ public class Weapon : MonoBehaviour
     {
         bulletsLeft = maxBullets;
         reloading = false;
+    }
+
+
+
+
+
+    void ApplyGoodies(Bullet bullet)
+    {
+        bullet.damage = damage;
+        bullet.bounces = bounces;
+        bullet.piercing = piercing;
+        bullet.aliveTimer = aliveTimer;
+        bullet.shotForce = bulletForce;
     }
 }

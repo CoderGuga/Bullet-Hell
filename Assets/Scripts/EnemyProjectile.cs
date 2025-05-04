@@ -25,18 +25,7 @@ public class EnemyProjectile : MonoBehaviour
         if (collision.gameObject.tag == "Wall")
         {
             if (bounces > 0){
-            //Debug.Log("Boing!");
-            ContactPoint2D contact = collision.GetContact(0);
-            Vector2 normal = contact.normal;
-            //float angle = 180 - Vector2.Angle(normal, velocity);
-            float angle = 180 - SignedAngle(normal, velocity);
-            //Debug.Log("velocity: " + rb.velocity);
-            rb.velocity = Vector2.zero; 
-            Vector2 dir = RotateVector(normal, angle);
-            rb.AddForce(dir * shotForce);
-            //Debug.Log($"Normal: {normal} Angle: {angle} dir: {dir}");
-            
-            bounces --;
+                Bounce(collision);
             }
             else
                 Destroy(gameObject);
@@ -87,6 +76,22 @@ public class EnemyProjectile : MonoBehaviour
         float cross = from.x * to.y - from.y * to.x; // 2D cross product
         float dot = Vector2.Dot(from, to);          // Dot product
         return Mathf.Atan2(cross, dot) * Mathf.Rad2Deg; // atan2 gives the signed angle
+    }
+
+    void Bounce(Collision2D collision)
+    {
+        //Debug.Log("Boing!");
+            ContactPoint2D contact = collision.GetContact(0);
+            Vector2 normal = contact.normal;
+            //float angle = 180 - Vector2.Angle(normal, velocity);
+            float angle = 180 - SignedAngle(normal, velocity);
+            //Debug.Log("velocity: " + rb.velocity);
+            rb.velocity = Vector2.zero; 
+            Vector2 dir = RotateVector(normal, angle);
+            rb.AddForce(dir * shotForce);
+            //Debug.Log($"Normal: {normal} Angle: {angle} dir: {dir}");
+            
+            bounces --;
     }
 
     void Update()
