@@ -20,11 +20,13 @@ public class PlayerHealth : MonoBehaviour
     {
         if (!isInvincible)
         {
+            transform.Find("Particles").Find("Damage Particles").GetComponent<ParticleSystem>().Play();
             playerCurrentHealth -= damageDone;
             if (playerCurrentHealth <= 0 || playerCurrentHealth >= playerMaxHealth)
                 playerDeath.Die();
+            else{
             playerMovement.moveSpeed += moveSpeedIncrease;
-            StartCoroutine(InvincibilityCoroutine());
+            StartCoroutine(InvincibilityCoroutine());}
         }
     }
 

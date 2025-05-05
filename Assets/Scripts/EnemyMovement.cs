@@ -8,9 +8,11 @@ public class EnemyMovement : MonoBehaviour
 {
     public GameObject target;
 
-    public float moveSpeed = 20f;
-    public float nextWaypointDistance = 0.2f;
-    public float pathUpdateTime = 0.5f;
+    public float moveSpeed = 200f,
+    nextWaypointDistance = 0.2f,
+    pathUpdateTime = 0.5f,
+    maxDistanceToPlayer = 0,
+    minDistanceToPlayer = 0;
 
     Pathfinding.Path path;
     int currentWaypoint = 0;
@@ -45,17 +47,23 @@ public class EnemyMovement : MonoBehaviour
 
     void FixedUpdate()
     {
+        Vector2 direction;
         if(path == null)
             return;
 
-        if (currentWaypoint >= path.vectorPath.Count)
+        if (currentWaypoint >= path.vectorPath.Count || Vector2.Distance(target.transform.position, transform.position) <= maxDistanceToPlayer)
         {
-            reachedEndOfPath = true;
-            return;
+            if (Vector2.Distance(target.transform.position, transform.position) <= minDistanceToPlayer)
+                direction = -((Vector2)path.vectorPath[currentWaypoint] - rb.position).normalized;
+            else{
+                reachedEndOfPath = true;
+                return;
+            }
         }else
+        {
+            direction = ((Vector2)path.vectorPath[currentWaypoint] - rb.position).normalized;
             reachedEndOfPath = false;
-
-        Vector2 direction = ((Vector2)path.vectorPath[currentWaypoint] - rb.position).normalized;
+        }
 
         Vector2 force = direction * moveSpeed * Time.deltaTime;
 

@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7423630417964454771}
   - component: {fileID: 28256706106438978}
+  - component: {fileID: -611583386450889646}
   - component: {fileID: 5109964610287168472}
   - component: {fileID: 2165062876181775365}
   - component: {fileID: 2674782017852066846}
@@ -87,6 +88,22 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!58 &-611583386450889646
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 526422336605050049}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 0.5
 --- !u!58 &5109964610287168472
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -139,6 +156,8 @@ MonoBehaviour:
   damage: 1
   aliveTimer: 3
   currentTime: 0
+  shotForce: 0
   piercing: 1
   bounces: 0
   feed: 1
+  velocity: {x: 0, y: 0}

@@ -4,18 +4,19 @@ using UnityEngine;
 
 public class Weapon : MonoBehaviour
 {
-    [SerializeField] float timeBetweenShooting = 0.5f; // Time delay between shooting consecutive sets of bullets
-    [SerializeField] float bulletsPerShot = 3f; // Number of bullets fired simultaneously in a single shot
-    [SerializeField] Transform firePoint; // Position from which bullets are spawned
-    [SerializeField] GameObject bulletPrefab; // Bullet type (from given prefab)
-    [SerializeField] float bulletForce = 20f; // Initial bullet speed
-    [SerializeField] float timeBetweenSameShootingShots = 0.4f; // Time delay between individual bullets within the same shot
-    [SerializeField] float maxBullets = 10f;
-    [SerializeField] float reloadTime = 2f;
-    [SerializeField] float bulletsLeft;
-    [SerializeField] float shotgunSpreadAngle = 20f; // The angle of the spread for shotgun pellets
-    [SerializeField] float shotgunPelletsPerShot = 5f;
-    [SerializeField] bool automatic, shotgun; // Weapon type
+    public float attackSpeed = 0.5f,
+    bulletsPerShot = 3f,
+    bulletForce = 20f,
+    semiAutoSpeed = 0.4f,
+    maxBullets = 10f,
+    reloadTime = 2f,
+    bulletsLeft,
+    randomSpreadAngle = 20f, 
+    shotgunPelletsPerShot = 5f;
+    public Transform firePoint; // Position from which bullets are spawned
+    public GameObject bulletPrefab; // Bullet type (from given prefab)
+    public bool automatic; 
+    //shotgun;
     public bool readyToShoot = true; // Flag to determine if the player is ready to shoot
     private bool reloading = false;
     [SerializeField] private bool isShooting; //to determing whether the player has given the input to shoot
@@ -47,7 +48,7 @@ public class Weapon : MonoBehaviour
 
         if (isShooting && IsWeaponReadyToShoot())
         {
-            if (Time.time - lastShotTime >= timeBetweenShooting)
+            if (Time.time - lastShotTime >= attackSpeed)
             {
                 lastShotTime = Time.time;
                 bulletsShot = bulletsPerShot; // Set the number of bullets to be shot in the current burst
@@ -65,21 +66,22 @@ public class Weapon : MonoBehaviour
     private void Shoot()
     {
         readyToShoot = false; // Prevent further shooting until cooldown
-        if (shotgun)
-        {
+        //if (shotgun){
+        
             for (int i = 0; i < shotgunPelletsPerShot; i++)
             {
                 Vector2 dir = (firePoint.position - transform.position).normalized;
                 // Create a bullet with a slight variation in rotation
-                float spread = Random.Range(-shotgunSpreadAngle, shotgunSpreadAngle);
+                float spread = Random.Range(-randomSpreadAngle, randomSpreadAngle);
                 Quaternion bulletRotation = firePoint.rotation * Quaternion.Euler(0f, 0f, spread);
 
                 GameObject bullet = Instantiate(bulletPrefab, firePoint.position, bulletRotation);
                 Rigidbody2D rb = bullet.GetComponent<Rigidbody2D>();
                 rb.AddForce(bulletRotation * dir * bulletForce); // Apply force to the bullet
-                if(bullet.TryGetComponent<Bullet>(out Bullet bulletSc));
+                if(bullet.TryGetComponent<Bullet>(out Bullet bulletSc))
                     ApplyGoodies(bulletSc);
             }
+        /*
         }
         else
         {
@@ -92,13 +94,14 @@ public class Weapon : MonoBehaviour
             Bullet bulletSc = bullet.GetComponent<Bullet>();
             ApplyGoodies(bulletSc);
         }
+        */
         
         bulletsLeft--;
         bulletsShot--;
 
         // If there are more bullets to be shot in the current burst, schedule the Shoot() method to be called again after a delay
         if (bulletsShot > 0 && bulletsLeft != 0f)
-            Invoke("Shoot", timeBetweenSameShootingShots);
+            Invoke("Shoot", semiAutoSpeed);
 
         // Schedule the ResetShot() method to reset the ability to shoot after the specified cooldown
         StartCoroutine(ResetShot());
@@ -106,7 +109,7 @@ public class Weapon : MonoBehaviour
 
     public IEnumerator ResetShot()
     {
-        yield return new WaitForSeconds(timeBetweenShooting);
+        yield return new WaitForSeconds(attackSpeed);
         readyToShoot = true; // Allow the player to shoot again
     }
 

@@ -8,14 +8,14 @@ public class EnemyShooting : MonoBehaviour
     shotForce = 10f,
     totalSpreadAngle = 0f,
     inaccuracyAngle = 0f,
-    aliveTimer;
+    aliveTimer = 5;
 
 
     public int projectilesPerShot = 1;
 
     public GameObject projectilePrefab, target;
 
-    public int damage, piercing, bounces;
+    public int damage = 1, piercing = 1, bounces;
     public bool feed;
 
     //float currentTime = 0f;

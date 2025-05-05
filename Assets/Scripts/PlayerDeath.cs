@@ -23,6 +23,8 @@ public class PlayerDeath : MonoBehaviour
 
             firePoint = transform.GetChild(0).gameObject;
 
+            gameObject.layer = LayerMask.NameToLayer("Invincible Player");
+
             SetStage(false);
             
             // Change the sprite

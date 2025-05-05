@@ -186,12 +186,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shotPeriod: 1
-  shotForce: 10
+  shotForce: 5
   totalSpreadAngle: 0
   inaccuracyAngle: 0
+  aliveTimer: 5
   projectilesPerShot: 1
   projectilePrefab: {fileID: 526422336605050049, guid: 95b49f49c9245db4796fc48592254617, type: 3}
   target: {fileID: 8681678343700625350, guid: 79ede5d10746149419fe74405f7653fc, type: 3}
+  damage: 1
+  piercing: 1
+  bounces: 0
+  feed: 0
 --- !u!114 &-3366005365980348009
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -246,6 +251,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 8681678343700625350, guid: 79ede5d10746149419fe74405f7653fc, type: 3}
-  moveSpeed: 20
+  moveSpeed: 200
   nextWaypointDistance: 0.2
   pathUpdateTime: 0.5
+  maxDistanceToPlayer: 5
+  minDistanceToPlayer: 0

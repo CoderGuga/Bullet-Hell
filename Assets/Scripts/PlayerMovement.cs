@@ -5,8 +5,10 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-    public float moveSpeed = 5f;
-    
+    public float moveSpeed = 5f, dashSpeed, dashTimer;
+
+    float timer;
+
     [SerializeField] Rigidbody2D rb;
     [SerializeField] Camera cam;
     private Animator anim;
@@ -21,11 +23,15 @@ public class PlayerMovement : MonoBehaviour
     Vector2 movement;
     private void Update()
     {
+        timer+=Time.deltaTime;
         movement.x = Input.GetAxisRaw("Horizontal");
         //anim.SetFloat("x", movement.x);
         movement.y = Input.GetAxisRaw("Vertical");
         //anim.SetFloat("y", movement.y);
         cam.transform.position = new Vector3(transform.position.x, transform.position.y, -10);
+
+        if (Input.GetButtonDown("Fire2") && timer > dashTimer)
+            Dash();
     }
 
     private void FixedUpdate()
@@ -39,5 +45,26 @@ public class PlayerMovement : MonoBehaviour
         Vector2 force = movement.normalized * moveSpeed * Time.deltaTime;
         rb.AddForce(force);
         
+    }
+
+
+
+
+    void Dash()
+    {
+        timer = 0;
+        Vector2 force = movement.normalized * dashSpeed;
+        rb.AddForce(force);
+        gameObject.layer = LayerMask.NameToLayer("Invincible Player");
+        transform.Find("Particles").Find("Dash").GetComponent<ParticleSystem>().Play();
+        
+        StartCoroutine(StopDash(0.5f));
+    }
+
+    IEnumerator StopDash(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        gameObject.layer = LayerMask.NameToLayer("Player");
+        rb.velocity = Vector2.zero;
     }
 }
