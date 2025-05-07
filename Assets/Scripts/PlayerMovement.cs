@@ -6,6 +6,7 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
     public float moveSpeed = 5f, dashSpeed, dashTimer;
+    public bool speedPerHp;
 
     float timer;
 
@@ -43,6 +44,8 @@ public class PlayerMovement : MonoBehaviour
 
 
         Vector2 force = movement.normalized * moveSpeed * Time.deltaTime;
+        if (speedPerHp)
+            force *= 1 + 0.1f*(GetComponent<PlayerHealth>().playerMaxHealth - GetComponent<PlayerHealth>().playerCurrentHealth);
         rb.AddForce(force);
         
     }

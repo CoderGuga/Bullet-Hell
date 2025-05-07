@@ -40,6 +40,7 @@ public class EnemyProjectile : MonoBehaviour
             {
                 if (feed)
                     damage *= -1;
+                Debug.Log("dealt " + damage + " damage");
                 playerHealth.DealDamage(damage);
                 piercing --;
             }
