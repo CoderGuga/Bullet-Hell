@@ -26,6 +26,7 @@ public class PlayerHealth : MonoBehaviour
         {
             transform.Find("Particles").Find("Damage Particles").GetComponent<ParticleSystem>().Play();
             playerCurrentHealth -= damageDone;
+            GetComponent<UIController>().UpdateHearts();
             //Debug.Log("took " + damageDone + " damage");
             if (playerCurrentHealth <= 0 || playerCurrentHealth >= playerMaxHealth)
                 playerDeath.Die();

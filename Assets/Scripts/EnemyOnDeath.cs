@@ -2,8 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyShooting : MonoBehaviour
+public class EnemyOnDeath : MonoBehaviour
 {
+    public bool shootProjectiles;
+
     public float shotPeriod = 1f,
     timeVariation = 0.2f,
     shotForce = 10f,
@@ -19,27 +21,17 @@ public class EnemyShooting : MonoBehaviour
     public int damage = 1, piercing = 1, bounces;
     public bool feed;
 
-    float timer, nextShot;
-
-    void Start()
+    
+    public void EnemyDie()
     {
-        nextShot = shotPeriod + Random.Range(-timeVariation, timeVariation);
+        if (shootProjectiles)
+            ShootProjectiles();
     }
 
-    void Update()
+    void ShootProjectiles()
     {
-        timer += Time.deltaTime;
-        if (timer >= nextShot)
-            Shoot();
-    }
-
-    void Shoot()
-    {
-        nextShot = shotPeriod + Random.Range(-timeVariation, timeVariation);
-        timer = 0;
-        
-            float spread = totalSpreadAngle/(projectilesPerShot-1);
-            float currentAngle = totalSpreadAngle/2;
+        float spread = totalSpreadAngle/(projectilesPerShot-1);
+        float currentAngle = totalSpreadAngle/2;
             for (int i = 0; i < projectilesPerShot; i++)
             {
                 float currentInaccuracy = Random.Range(-inaccuracyAngle, inaccuracyAngle);

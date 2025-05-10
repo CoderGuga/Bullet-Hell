@@ -5,6 +5,7 @@ using UnityEngine;
 public class EnemyHealth : MonoBehaviour
 {
     [SerializeField] float health, maxHealth = 3f;
+    public int spawnWeight = 1;
     public EnemySpawner enemySpawner;
     // Start is called before the first frame update
     private void Start()
@@ -19,10 +20,13 @@ public class EnemyHealth : MonoBehaviour
         if(health <= 0 && enemySpawner.enemyList.Contains(gameObject))
         {
             enemySpawner.enemyList.Remove(gameObject);
-            if (enemySpawner.enemyList.Count == 0)
+            enemySpawner.currentSpawnWeight -= spawnWeight;
+            enemySpawner.CheckWave();
+            if (GetComponent<EnemyOnDeath>())
             {
-                Debug.Log("last enemy killed");
-                enemySpawner.EndWave();
+                EnemyOnDeath enemyOnDeath = GetComponent<EnemyOnDeath>();
+                enemyOnDeath.target = GetComponent<EnemyMovement>().target;
+                enemyOnDeath.EnemyDie();
             }
             Destroy(gameObject);
         }

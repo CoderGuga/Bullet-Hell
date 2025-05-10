@@ -18,8 +18,9 @@ GameObject:
   - component: {fileID: 6928845799139919602}
   - component: {fileID: -4417089177732577709}
   - component: {fileID: 5940013332303271307}
+  - component: {fileID: 3630241355196714109}
   m_Layer: 7
-  m_Name: Enemy
+  m_Name: Exploding
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -34,8 +35,8 @@ Transform:
   m_GameObject: {fileID: 6928845799139919609}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -7.16, y: 1.9, z: 0}
-  m_LocalScale: {x: 1.2, y: 1.2, z: 1.2}
-  m_ConstrainProportionsScale: 1
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -82,7 +83,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: -2413806693520163455, guid: ebe73ca9363db456bacf42c025bb4847, type: 3}
-  m_Color: {r: 0.6320754, g: 0, b: 0, a: 1}
+  m_Color: {r: 0.6313726, g: 0, b: 0.52027863, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -159,7 +160,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   health: 0
   maxHealth: 3
-  spawnWeight: 1
+  spawnWeight: 2
   enemySpawner: {fileID: 0}
 --- !u!114 &6928845799139919600
 MonoBehaviour:
@@ -228,8 +229,34 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 8681678343700625350, guid: 79ede5d10746149419fe74405f7653fc, type: 3}
-  moveSpeed: 350
+  moveSpeed: 200
   nextWaypointDistance: 0.2
   pathUpdateTime: 0.5
   maxDistanceToPlayer: 0
   minDistanceToPlayer: 0
+--- !u!114 &3630241355196714109
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6928845799139919609}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e4d422db5d2c5ca4e8da656064f5d9bf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  shootProjectiles: 1
+  shotPeriod: 1
+  timeVariation: 0.2
+  shotForce: 8
+  totalSpreadAngle: 270
+  inaccuracyAngle: 0
+  aliveTimer: 5
+  projectilesPerShot: 8
+  projectilePrefab: {fileID: 526422336605050049, guid: 95b49f49c9245db4796fc48592254617, type: 3}
+  target: {fileID: 0}
+  damage: 1
+  piercing: 1
+  bounces: 1
+  feed: 0

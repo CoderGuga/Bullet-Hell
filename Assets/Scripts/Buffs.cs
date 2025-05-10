@@ -36,6 +36,7 @@ public class Buffs : MonoBehaviour
         if (TryGetComponent<PlayerHealth>(out PlayerHealth playerHealth))
         {
             playerHealth.playerMaxHealth ++;
+            GetComponent<UIController>().AddHearts();
         }
     }
 
@@ -118,6 +119,14 @@ public class Buffs : MonoBehaviour
         if (TryGetComponent<PlayerMovement>(out PlayerMovement playerMovement))
         {
             playerMovement.speedPerHp = true;
+        }
+    }
+
+    public void GoldenMiddle()
+    {
+        if (TryGetComponent<PlayerHealth>(out PlayerHealth playerHealth))
+        {
+            playerHealth.goldenMiddle = true;
         }
     }
 }

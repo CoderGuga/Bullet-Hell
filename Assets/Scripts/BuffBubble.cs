@@ -16,21 +16,22 @@ public class BuffBubble : MonoBehaviour
     upAttackSpeed,
     upMovementSpeed,
     shootingPet,
-    dashingPet,
+//    dashingPet,
     invincibilityDurationUp,
     shotsPerAttackUp,
     damagePerHp,
     speedPerHp,
     upAccuracy,
     bulletsOnDamageTake,
-    destroyableEnemyBullets,
+//    destroyableEnemyBullets,
     delayedDamage,
     goldenMiddle,
-    bulletsSplit,
+//    bulletsSplit,
     infuseBullets,
-    explodingEnemies,
-    eatCorpses,
-    bulletSpeedUp;
+//    explodingEnemies,
+//    eatCorpses,
+    bulletSpeedUp,
+    dashDamage;
     void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.tag == "Player")
@@ -52,6 +53,7 @@ public class BuffBubble : MonoBehaviour
             if (shotsPerAttackUp) ShotsPerAttackUp();
             if (damagePerHp) DamagePerHp();
             if (speedPerHp) SpeedPerHp();
+            if(goldenMiddle) GoldenMiddle();
 
                 buffSpawner.DestoyBuffBubbles();
                 Debug.Log("Buff Taken");
@@ -125,6 +127,12 @@ public class BuffBubble : MonoBehaviour
     void SpeedPerHp()
     {
         buffs.SpeedPerHp();
+        RemoveFromList();
+    }
+
+    void GoldenMiddle()
+    {
+        buffs.GoldenMiddle();
         RemoveFromList();
     }
 

@@ -12,28 +12,42 @@ public class EnemySpawner : MonoBehaviour
     public BuffSpawner buffSpawner;
     public GameObject player, spawnMarker;
 
-    public List<GameObject> enemyList, enemyPrefabs;
-    public int spawnsPerWave, livingEnemiesUntilSpawn;
+    public List<GameObject> enemyList, enemyPrefabs, layoutList;
+    public int spawnWeightPerWave, livingEnemyWeightUntilSpawn, iteration, currentSpawnWeight;
     public bool canSpawnEnemies;
+
+    int currentSpawnNum;
 
     public void NextWave()
     { 
+        iteration ++;
         SpawnWave();
-        spawnsPerWave ++;
+        spawnWeightPerWave += iteration;
+    }
+
+    public void CheckWave()
+    {
+        if (currentSpawnNum < 3 && currentSpawnWeight <= livingEnemyWeightUntilSpawn)
+            SpawnWave();
+        else if (currentSpawnNum >= 3 && currentSpawnWeight == 0)
+            EndWave();
     }
 
     public void EndWave()
     {
         Debug.Log("EndWave");
+        layoutList[iteration-1].SetActive(false);
+        layoutList[iteration].SetActive(true);
         buffSpawner.SpawnBuffBubbles();
     }
 
     public void SpawnWave()
     {
-            for (int i = 0; i < spawnsPerWave; i++)
+            while (currentSpawnWeight < spawnWeightPerWave)
             {
                 StartCoroutine(SpawnEnemy());
             }
+            currentSpawnNum ++;
     }
 
     public IEnumerator SpawnEnemy()
@@ -49,14 +63,16 @@ public class EnemySpawner : MonoBehaviour
         {
             // Convert the node's position to world coordinates
             Vector3 spawnPosition = (Vector3)randomNode.position;
+            GameObject enemyPrefab = enemyPrefabs[UnityEngine.Random.Range(0, enemyPrefabs.Count)];
+            currentSpawnWeight += enemyPrefab.GetComponent<EnemyHealth>().spawnWeight;
             
             GameObject marker = Instantiate(spawnMarker, spawnPosition, Quaternion.identity);
             yield return new WaitForSeconds(1f);
             Destroy(marker);
 
-            GameObject enemyPrefab = enemyPrefabs[UnityEngine.Random.Range(0, enemyPrefabs.Count)];
             // Spawn the enemy at the random position
             GameObject enemy = Instantiate(enemyPrefab, spawnPosition, Quaternion.identity);
+            
 
             if (enemy.GetComponent<EnemyMovement>())
             enemy.GetComponent<EnemyMovement>().target = player;

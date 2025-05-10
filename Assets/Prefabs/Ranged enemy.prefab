@@ -83,7 +83,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: -2413806693520163455, guid: ebe73ca9363db456bacf42c025bb4847, type: 3}
-  m_Color: {r: 0.6320754, g: 0, b: 0, a: 1}
+  m_Color: {r: 0.5, g: 0, b: 0, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -160,6 +160,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   health: 0
   maxHealth: 3
+  spawnWeight: 1
+  enemySpawner: {fileID: 0}
 --- !u!114 &3849081826819425525
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -185,7 +187,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e7cae3686548f64a8c5aaa08a4194fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  shotPeriod: 1
+  shotPeriod: 2
+  timeVariation: 0.2
   shotForce: 5
   totalSpreadAngle: 0
   inaccuracyAngle: 0
