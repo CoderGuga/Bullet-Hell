@@ -19,13 +19,15 @@ public class EnemyOnDeath : MonoBehaviour
     public GameObject projectilePrefab, target;
 
     public int damage = 1, piercing = 1, bounces;
-    public bool feed;
+    public bool feed, flyingBoss;
 
     
     public void EnemyDie()
     {
         if (shootProjectiles)
             ShootProjectiles();
+        if (flyingBoss)
+            FlyingBoss();
     }
 
     void ShootProjectiles()
@@ -47,6 +49,11 @@ public class EnemyOnDeath : MonoBehaviour
                 ApplyGoodies(enemyProjectile);
                 //Debug.Log("CurrentAngle" + currentAngle);
             }
+    }
+
+    void FlyingBoss()
+    {
+        GetComponent<FlyingBoss>().Die();
     }
 
     void ApplyGoodies(EnemyProjectile enemyProjectile)

@@ -9,7 +9,9 @@ public class Weapon : MonoBehaviour
     bulletForce = 20f,
     semiAutoSpeed = 0.4f,
     randomSpreadAngle = 5f,
-    totalSpreadAngle = 0f, 
+    totalSpreadAngle = 0f,
+    movementSpreadPenaltyMult = 2,
+    stabilizationTime = 2,
     shotgunPelletsPerShot = 5f,
     attackSpeedMult = 1;
     public Transform firePoint; // Position from which bullets are spawned
@@ -24,6 +26,8 @@ public class Weapon : MonoBehaviour
     public int damage, piercing, bounces;
     public float aliveTimer, currentAttackSpeed;
 
+    float currentMovementSpreadPenalty = 1;
+
 
     void Start()
     {
@@ -32,6 +36,11 @@ public class Weapon : MonoBehaviour
 
     private void Update()
     {
+        if (currentMovementSpreadPenalty > 1)
+        {
+            currentMovementSpreadPenalty -= (movementSpreadPenaltyMult - 1) / stabilizationTime * Time.deltaTime;
+        }
+
         currentAttackSpeed = attackSpeed / attackSpeedMult;
         if (Input.GetButton("Fire1"))
         {
@@ -45,26 +54,28 @@ public class Weapon : MonoBehaviour
 
     private void Shoot()
     {
-        float spread = totalSpreadAngle/(shotgunPelletsPerShot-1);
-        float currentAngle = totalSpreadAngle/2;
-        
-            for (int i = 0; i < shotgunPelletsPerShot; i++)
-            {
-                Vector2 dir = (firePoint.position - transform.position).normalized;
-                float randomSpread;
-                if (randomSpreadAngle > 0)
-                    randomSpread = UnityEngine.Random.Range(-randomSpreadAngle, randomSpreadAngle);
-                else
-                    randomSpread = 0;
-                Quaternion bulletRotation = firePoint.rotation * Quaternion.Euler(0f, 0f, currentAngle+randomSpread);
+        float spread = totalSpreadAngle / (shotgunPelletsPerShot - 1) * currentMovementSpreadPenalty;
+        float currentAngle = totalSpreadAngle / 2;
 
-                GameObject bullet = Instantiate(bulletPrefab, firePoint.position, bulletRotation);
-                Rigidbody2D rb = bullet.GetComponent<Rigidbody2D>();
-                rb.AddForce(bulletRotation * dir * bulletForce); // Apply force to the bullet
-                if(bullet.TryGetComponent<Bullet>(out Bullet bulletSc))
-                    ApplyGoodies(bulletSc);
-                currentAngle-=spread;
-            }
+        for (int i = 0; i < shotgunPelletsPerShot; i++)
+        {
+            Vector2 dir = (firePoint.position - transform.position).normalized;
+            float randomSpread;
+            if (randomSpreadAngle > 0)
+                randomSpread = UnityEngine.Random.Range(-randomSpreadAngle, randomSpreadAngle) * currentMovementSpreadPenalty;
+            else
+                randomSpread = 0;
+            Quaternion bulletRotation = firePoint.rotation * Quaternion.Euler(0f, 0f, currentAngle + randomSpread);
+
+            GameObject bullet = Instantiate(bulletPrefab, firePoint.position, bulletRotation);
+            Rigidbody2D rb = bullet.GetComponent<Rigidbody2D>();
+            rb.AddForce(bulletRotation * dir * bulletForce); // Apply force to the bullet
+            if (bullet.TryGetComponent<Bullet>(out Bullet bulletSc))
+                ApplyGoodies(bulletSc);
+            currentAngle -= spread;
+        }
+
+        GetComponent<PlayerMovement>().Knockback();
 
     }
 
@@ -89,6 +100,14 @@ public class Weapon : MonoBehaviour
     }
 
 
+    public void Destabilize()
+    {
+        currentMovementSpreadPenalty = movementSpreadPenaltyMult;
+    }
+
+    
+
+
 
 
     public void ApplyGoodies(Bullet bullet)
@@ -98,6 +117,7 @@ public class Weapon : MonoBehaviour
         bullet.piercing = piercing;
         bullet.aliveTimer = aliveTimer;
         bullet.shotForce = bulletForce;
+        bullet.GetComponent<ParticleSystem>().Play();
 
         if (damagePerHp)
             bullet.damage += playerHealth.playerCurrentHealth - 1;

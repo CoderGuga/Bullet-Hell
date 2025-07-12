@@ -4,9 +4,11 @@ using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {
-    public float damage = 1f, shotForce;
+    public float damage = 1f, shotForce,
+    bulletSlowDownRate = 2; //how much percent of velocity it loses in a second (1 = 100%)
     public float aliveTimer = 1f, currentTime;
     public int piercing = 1, bounces;
+    public bool slowDown;
     Rigidbody2D rb;
     Vector2 velocity;
 
@@ -44,6 +46,8 @@ public class Bullet : MonoBehaviour
 
     void Update()
     {
+        if (slowDown)
+            rb.velocity -= rb.velocity * Time.deltaTime * bulletSlowDownRate;
         velocity = rb.velocity;
         currentTime += Time.deltaTime;
         if (currentTime >= aliveTimer || piercing <= 0)

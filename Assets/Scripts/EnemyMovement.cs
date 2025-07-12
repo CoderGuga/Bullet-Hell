@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using Pathfinding;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class EnemyMovement : MonoBehaviour
@@ -12,11 +13,15 @@ public class EnemyMovement : MonoBehaviour
     nextWaypointDistance = 0.2f,
     pathUpdateTime = 0.5f,
     maxDistanceToPlayer = 0,
-    minDistanceToPlayer = 0;
+    minDistanceToPlayer = 0,
+    detectionRange;
+
+    public bool dormant;
 
     Pathfinding.Path path;
     int currentWaypoint = 0;
     bool reachedEndOfPath = false;
+    private SpriteRenderer sr;
 
     Seeker seeker;
     Rigidbody2D rb;
@@ -25,14 +30,21 @@ public class EnemyMovement : MonoBehaviour
     {
         seeker = GetComponent<Seeker>();
         rb = GetComponent<Rigidbody2D>();
+        sr = GetComponent<SpriteRenderer>();
 
         InvokeRepeating("UpdatePath", 0f, pathUpdateTime);
         
     }
 
+    void CheckDormant()
+    {
+        if (Vector2.Distance(transform.position, target.transform.position) <= detectionRange)
+            dormant = false;
+    }
+
     void UpdatePath()
     {
-        if (seeker.IsDone())
+        if (seeker.IsDone() && !dormant)
             seeker.StartPath(rb.position, target.transform.position, OnPathComplete);
     }
 
@@ -47,6 +59,8 @@ public class EnemyMovement : MonoBehaviour
 
     void FixedUpdate()
     {
+        if (dormant)
+            CheckDormant();
         Vector2 direction;
         if(path == null)
             return;
@@ -68,6 +82,8 @@ public class EnemyMovement : MonoBehaviour
         Vector2 force = direction * moveSpeed * Time.deltaTime;
 
         rb.AddForce(force);
+
+        sr.flipX = rb.velocity.x < 0;
 
         float distance = Vector2.Distance(rb.position, path.vectorPath[currentWaypoint]);
 

@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class EnemyMeeleDamage : MonoBehaviour
 {
-    public int damage;
+    public int damage = 1;
+    public bool feed;
     void OnTriggerEnter2D(Collider2D collider)
     {
         if (collider.tag == "Player")
@@ -13,6 +14,8 @@ public class EnemyMeeleDamage : MonoBehaviour
 
     void DamagePlayer(PlayerHealth playerHealth)
     {
+        if (feed)
+            damage *= -1;
         playerHealth.DealDamage(damage);
     }
 }

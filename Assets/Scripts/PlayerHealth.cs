@@ -30,13 +30,15 @@ public class PlayerHealth : MonoBehaviour
             //Debug.Log("took " + damageDone + " damage");
             if (playerCurrentHealth <= 0 || playerCurrentHealth >= playerMaxHealth)
                 playerDeath.Die();
-            else{
-            if (shotsOnDamage)
-                weapon.ShotsOnDamage();
-            if (goldenMiddle)
-                GoldenMiddle();
-            playerMovement.moveSpeed += moveSpeedIncrease;
-            StartCoroutine(InvincibilityCoroutine());}
+            else
+            {
+                if (shotsOnDamage)
+                    weapon.ShotsOnDamage();
+                if (goldenMiddle)
+                    GoldenMiddle();
+                playerMovement.moveSpeed += moveSpeedIncrease;
+                StartCoroutine(InvincibilityCoroutine());
+            }
         }
     }
 
@@ -52,13 +54,13 @@ public class PlayerHealth : MonoBehaviour
 
     private void GoldenMiddle()
     {
-        if ((Math.Floor((decimal) playerMaxHealth) == playerCurrentHealth || Math.Ceiling((decimal) playerMaxHealth) == playerCurrentHealth) && !goldenMiddleOn)
+        if ((Math.Floor((decimal)playerMaxHealth) == playerCurrentHealth || Math.Ceiling((decimal)playerMaxHealth) == playerCurrentHealth) && !goldenMiddleOn)
         {
             weapon.damage += 2;
             weapon.attackSpeedMult += 0.5f;
             goldenMiddle = true;
         }
-        else if ((Math.Floor((decimal) playerMaxHealth) != playerCurrentHealth && Math.Ceiling((decimal) playerMaxHealth) != playerCurrentHealth) &&goldenMiddle)
+        else if ((Math.Floor((decimal)playerMaxHealth) != playerCurrentHealth && Math.Ceiling((decimal)playerMaxHealth) != playerCurrentHealth) && goldenMiddle)
         {
             weapon.damage -= 2;
             weapon.attackSpeedMult -= 0.5f;

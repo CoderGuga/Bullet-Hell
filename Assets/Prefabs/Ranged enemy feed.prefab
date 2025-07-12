@@ -19,6 +19,7 @@ GameObject:
   - component: {fileID: -3366005365980348009}
   - component: {fileID: -545619771750328002}
   - component: {fileID: -5097556297209738750}
+  - component: {fileID: 7903647144625761278}
   m_Layer: 7
   m_Name: Ranged enemy feed
   m_TagString: Enemy
@@ -82,8 +83,8 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: -2413806693520163455, guid: ebe73ca9363db456bacf42c025bb4847, type: 3}
-  m_Color: {r: 0.042004082, g: 0.6313726, b: 0, a: 1}
+  m_Sprite: {fileID: 1098246246, guid: 2a074b58f0af829459f4e8071d609e8a, type: 3}
+  m_Color: {r: 0.25272352, g: 0.8113208, b: 0.21175979, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -160,6 +161,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   health: 0
   maxHealth: 3
+  spawnWeight: 1
   enemySpawner: {fileID: 0}
 --- !u!114 &3849081826819425525
 MonoBehaviour:
@@ -174,6 +176,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damage: 1
+  feed: 0
 --- !u!114 &5532140044699489381
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -187,6 +190,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shotPeriod: 1
+  timeVariation: 0.2
   shotForce: 5
   totalSpreadAngle: 0
   inaccuracyAngle: 0
@@ -257,3 +261,23 @@ MonoBehaviour:
   pathUpdateTime: 0.5
   maxDistanceToPlayer: 5
   minDistanceToPlayer: 0
+--- !u!95 &7903647144625761278
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6985834102151712741}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 23b1dba293c439f49a1561bc6e8c0901, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0

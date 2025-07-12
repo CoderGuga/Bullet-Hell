@@ -17,17 +17,21 @@ public class EnemyHealth : MonoBehaviour
     {
         health -= damageAmount;
 
-        if(health <= 0 && enemySpawner.enemyList.Contains(gameObject))
+        if(health <= 0)
         {
-            enemySpawner.enemyList.Remove(gameObject);
-            enemySpawner.currentSpawnWeight -= spawnWeight;
-            enemySpawner.CheckWave();
-            if (GetComponent<EnemyOnDeath>())
+            if (enemySpawner != null && enemySpawner.enemyList.Contains(gameObject))
             {
-                EnemyOnDeath enemyOnDeath = GetComponent<EnemyOnDeath>();
-                enemyOnDeath.target = GetComponent<EnemyMovement>().target;
-                enemyOnDeath.EnemyDie();
+                enemySpawner.enemyList.Remove(gameObject);
+                enemySpawner.currentSpawnWeight -= spawnWeight;
+                enemySpawner.CheckWave();
             }
+            
+            if (GetComponent<EnemyOnDeath>())
+                {
+                    EnemyOnDeath enemyOnDeath = GetComponent<EnemyOnDeath>();
+                    enemyOnDeath.target = GetComponent<EnemyMovement>().target;
+                    enemyOnDeath.EnemyDie();
+                }
             Destroy(gameObject);
         }
     }

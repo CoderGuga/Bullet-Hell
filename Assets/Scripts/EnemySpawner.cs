@@ -10,7 +10,7 @@ using System;
 public class EnemySpawner : MonoBehaviour
 {
     public BuffSpawner buffSpawner;
-    public GameObject player, spawnMarker;
+    public GameObject player, spawnMarker, flyingBossPrefab;
 
     public List<GameObject> enemyList, enemyPrefabs, layoutList;
     public int spawnWeightPerWave, livingEnemyWeightUntilSpawn, iteration, currentSpawnWeight;
@@ -21,7 +21,10 @@ public class EnemySpawner : MonoBehaviour
     public void NextWave()
     { 
         iteration ++;
-        SpawnWave();
+        if (iteration == 4)
+            SpawnFlyingBoss();
+        else
+            SpawnWave();
         spawnWeightPerWave += iteration;
     }
 
@@ -35,10 +38,15 @@ public class EnemySpawner : MonoBehaviour
 
     public void EndWave()
     {
-        Debug.Log("EndWave");
-        layoutList[iteration-1].SetActive(false);
-        layoutList[iteration].SetActive(true);
-        buffSpawner.SpawnBuffBubbles();
+        if (iteration < layoutList.Count)
+        {
+            Debug.Log("EndWave");
+            layoutList[iteration-1].SetActive(false);
+            layoutList[iteration].SetActive(true);
+            buffSpawner.SpawnBuffBubbles();
+        }
+        else
+            Debug.Log("Victoryyyyyyyyyyyyyyyyyyyyy!!!");
     }
 
     public void SpawnWave()
@@ -48,6 +56,16 @@ public class EnemySpawner : MonoBehaviour
                 StartCoroutine(SpawnEnemy());
             }
             currentSpawnNum ++;
+    }
+
+    public void SpawnFlyingBoss()
+    {
+        Vector2 bossSpawn = new Vector2(transform.position.x, transform.position.y + 5);
+        GameObject flyingBoss = Instantiate(flyingBossPrefab, bossSpawn, Quaternion.identity); 
+        flyingBoss.GetComponent<EnemyMovement>().target = player;
+        flyingBoss.GetComponent<EnemyHealth>().enemySpawner = GetComponent<EnemySpawner>();
+        flyingBoss.GetComponent<FlyingBoss>().player = player;
+        flyingBoss.GetComponent<FlyingBoss>().enemySpawner = GetComponent<EnemySpawner>();
     }
 
     public IEnumerator SpawnEnemy()
@@ -73,15 +91,7 @@ public class EnemySpawner : MonoBehaviour
             // Spawn the enemy at the random position
             GameObject enemy = Instantiate(enemyPrefab, spawnPosition, Quaternion.identity);
             
-
-            if (enemy.GetComponent<EnemyMovement>())
-            enemy.GetComponent<EnemyMovement>().target = player;
-            if (enemy.GetComponent<EnemyShooting>())
-            enemy.GetComponent<EnemyShooting>().target = player;
-            if (enemy.GetComponent<EnemyHealth>())
-            enemy.GetComponent<EnemyHealth>().enemySpawner = GetComponent<EnemySpawner>();
-
-            enemyList.Add(enemy);
+            ApplyGoodies(enemy);
         }
         else
         {
@@ -129,5 +139,17 @@ public class EnemySpawner : MonoBehaviour
         }
 
         return minEnemy;
+    }
+
+    void ApplyGoodies(GameObject enemy)
+    {
+        if (enemy.GetComponent<EnemyMovement>())
+            enemy.GetComponent<EnemyMovement>().target = player;
+        if (enemy.GetComponent<EnemyShooting>())
+            enemy.GetComponent<EnemyShooting>().target = player;
+        if (enemy.GetComponent<EnemyHealth>())
+            enemy.GetComponent<EnemyHealth>().enemySpawner = GetComponent<EnemySpawner>();
+
+        enemyList.Add(enemy);
     }
 }

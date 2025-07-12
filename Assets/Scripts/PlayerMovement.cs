@@ -5,7 +5,10 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-    public float moveSpeed = 5f, dashSpeed, dashTimer;
+    public float moveSpeed = 5f,
+    dashSpeed,
+    dashTimer,
+    knockbackSpeed;
     public bool speedPerHp;
 
     float timer;
@@ -24,7 +27,7 @@ public class PlayerMovement : MonoBehaviour
     Vector2 movement;
     private void Update()
     {
-        timer+=Time.deltaTime;
+        timer += Time.deltaTime;
         movement.x = Input.GetAxisRaw("Horizontal");
         //anim.SetFloat("x", movement.x);
         movement.y = Input.GetAxisRaw("Vertical");
@@ -44,10 +47,12 @@ public class PlayerMovement : MonoBehaviour
 
 
         Vector2 force = movement.normalized * moveSpeed * Time.deltaTime;
+        if (force.magnitude > 0.1)
+            GetComponent<Weapon>().Destabilize();
         if (speedPerHp)
-            force *= 1 + 0.1f*(GetComponent<PlayerHealth>().playerMaxHealth - GetComponent<PlayerHealth>().playerCurrentHealth);
+            force *= 1 + 0.1f * (GetComponent<PlayerHealth>().playerMaxHealth - GetComponent<PlayerHealth>().playerCurrentHealth);
         rb.AddForce(force);
-        
+
     }
 
 
@@ -60,7 +65,7 @@ public class PlayerMovement : MonoBehaviour
         rb.AddForce(force);
         gameObject.layer = LayerMask.NameToLayer("Invincible Player");
         transform.Find("Particles").Find("Dash").GetComponent<ParticleSystem>().Play();
-        
+
         StartCoroutine(StopDash(0.5f));
     }
 
@@ -68,6 +73,21 @@ public class PlayerMovement : MonoBehaviour
     {
         yield return new WaitForSeconds(delay);
         gameObject.layer = LayerMask.NameToLayer("Player");
+        rb.velocity = Vector2.zero;
+    }
+    
+    public void Knockback()
+    {
+        timer = 0;
+        Vector2 force = (transform.position - transform.Find("Firepoint").position) * knockbackSpeed;
+        rb.AddForce(force);
+        
+        StartCoroutine(StopKnockback(0.1f));
+    }
+
+    IEnumerator StopKnockback(float delay)
+    {
+        yield return new WaitForSeconds(delay);
         rb.velocity = Vector2.zero;
     }
 }
